@@ -1,0 +1,7 @@
+{
+    "Parameters": {
+        "CAPTURE_URL": "",
+        "S3_BUCKET_NAME": "",
+        "S3_PATH": ""
+    }
+}
