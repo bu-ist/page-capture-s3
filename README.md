@@ -91,6 +91,8 @@ To simulate the Eventbridge schedule trigger, run:
 npm run local:schedule
 ```
 
+Local testing by default looks for parameters inside `template.yml` so when simulating the lambda locally, the default parameters need to be overriden by using `--env-vars local-env-example.json` in the `sam local invoke` command found in `package.json`. Update `local-env-example.json` with your own parameters.
+
 ## How to remove
 
 The Lambda and all of it's associated resources can be removed by deleting the CloudFormation stack.  The existing S3 bucket specified for the static assets will not be affected.
