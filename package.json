@@ -9,7 +9,7 @@
     "local:sqs": "sam local generate-event sqs receive-message | sam local invoke -e - PageCaptureFunction"
   },
   "dependencies": {
-    "del": "^6.0.0",
+    "del": "^6.1.1",
     "s3-node-client": "^4.4.4",
     "url-parse": "^1.5.3",
     "website-scraper": "^4.2.3"
