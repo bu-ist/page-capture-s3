@@ -34,7 +34,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Description: Lambda function to run the page capture and upload to S3. Runs when a request comes into the Capture Queue.
-      Runtime: nodejs14.x
+      Runtime: nodejs22.x
       Handler: src/page-capture.pageCapture
       Environment:
         Variables:
@@ -84,7 +84,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Description: Trigger to pass the API gateway event into SQS
-      Runtime: nodejs14.x
+      Runtime: nodejs22.x
       Handler: src/trigger.captureTriggerHandler
       Policies:
         SQSSendMessagePolicy: 
