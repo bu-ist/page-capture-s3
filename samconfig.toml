@@ -16,7 +16,7 @@ image_repositories = []
 [test.deploy.parameters]
 stack_name = "homepage-capture-s3-test"
 s3_prefix = "homepage-capture-s3-test"
-resolve-s3 = true
+resolve_s3 = true
 region = "us-east-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
