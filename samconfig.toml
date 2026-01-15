@@ -18,7 +18,6 @@ stack_name = "homepage-capture-s3-test"
 s3_prefix = "homepage-capture-s3-test"
 resolve_s3 = true
 region = "us-east-1"
-confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
 parameter_overrides = "CaptureUrl=\"https://www-test.bu.edu/homepage-alt/?is_buhp_scrape=true\" S3Path=\"\" SubdirPrefix=\"home\""
 image_repositories = []
