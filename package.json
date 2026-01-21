@@ -6,12 +6,16 @@
   "license": "MIT",
   "scripts": {
     "local:schedule": "sam local generate-event cloudwatch scheduled-event | sam local invoke -e - PageCaptureFunction",
-    "local:sqs": "sam local generate-event sqs receive-message | sam local invoke -e - PageCaptureFunction"
+    "local:sqs": "sam local generate-event sqs receive-message | sam local invoke -e - PageCaptureFunction",
+    "test": "vitest"
   },
   "dependencies": {
     "del": "^6.1.1",
     "s3-node-client": "^4.4.4",
     "url-parse": "^1.5.3",
-    "website-scraper": "^4.2.3"
+    "website-scraper": "^6.0.0"
+  },
+  "devDependencies": {
+    "vitest": "^4.0.17"
   }
 }
