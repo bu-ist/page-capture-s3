@@ -3,7 +3,15 @@
  */
 
 // 
-const scrape = require('website-scraper');
+// website-scraper is ESM-only in recent versions. In CommonJS, load it via dynamic import().
+let scrapeFn;
+async function getScrape() {
+    if (!scrapeFn) {
+        const mod = await import('website-scraper');
+        scrapeFn = mod.default ?? mod;
+    }
+    return scrapeFn;
+}
 const s3 = require('s3-node-client');
 const del = require('del');
 const Url = require('url-parse');
@@ -58,7 +66,7 @@ exports.pageCapture = async (event, context, callback) => {
             Prefix: process.env.S3_PATH,
         },
     };
-
+    const scrape = await getScrape();
     const result = await scrape(scrapeOptions);
 
     if (result[0].saved) {
