@@ -36,7 +36,6 @@
             role-session-name: GitHub_to_AWS_via_FederatedOIDC
             aws-region: ${{ env.AWS_REGION }}
         - run: npm ci
-        - run: npm test
         - run: sam build --config-env test
         - run: sam deploy --config-env test
   

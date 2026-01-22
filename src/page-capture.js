@@ -3,23 +3,22 @@
  */
 
 // 
-const scrapeModulePromise = import('website-scraper');
-import { createClient } from 's3-node-client';
-import del from 'del';
-import Url from 'url-parse';
-import ValidatePlugin from './page-capture/validatePlugin';
+const scrape = require('website-scraper');
+const s3 = require('s3-node-client');
+const del = require('del');
+const Url = require('url-parse');
 
-//const ValidatePlugin = require('./page-capture/validatePlugin');
+const ValidatePlugin = require('./page-capture/validatePlugin');
 
 const captureURL = new Url(process.env.CAPTURE_URL);
 
 // Allow for a prefix to the subdirectory, and add a slash if it is set.
 const subDirPrefix = (process.env.SUBDIR_PREFIX !== '') ? `${process.env.SUBDIR_PREFIX}/` : '';
 
-const client = createClient();
+const client = s3.createClient();
 
-export async function pageCapture(event, context, callback) {
-    const { default: scrape } = await scrapeModulePromise;
+exports.pageCapture = async (event, context, callback) => {
+    
     // Track the event source for logging purposes
     let eventMessage = '';
 
@@ -75,7 +74,7 @@ export async function pageCapture(event, context, callback) {
             console.log("done uploading, deleting local files");
 
             (async () => {
-                const deletedPaths = await del(['/tmp/page-capture/*'], { force: true });
+                deletedPaths = await del(['/tmp/page-capture/*'], {force: true});
                 console.log('deleted temp files at: ', deletedPaths);
             })();
 
