@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------------------------------------------------
 # 
 # This is the production continuous integration build github action.
-# Activates on any commit to the main branch.
+# Activates on any commit to the test branch.
 #
 # ----------------------------------------------------------------------------------------------------------
 
