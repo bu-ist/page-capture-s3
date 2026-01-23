@@ -19,6 +19,7 @@ s3_prefix = "websites-homepage-capture-s3-test"
 resolve_s3 = true
 region = "us-east-1"
 capabilities = "CAPABILITY_IAM"
+tags = "Service=\"websites\" Function=\"homepage\" Landscape=\"test\""
 parameter_overrides = "CaptureUrl=\"https://www-test.bu.edu/homepage-alt/?is_buhp_scrape=true\" S3BucketName=\"websites-homepage-capture-s3-test-files\" S3Path=\"\" SubdirPrefix=\"home\""
 image_repositories = []
 

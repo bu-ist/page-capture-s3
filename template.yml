@@ -13,7 +13,7 @@ Parameters:
   S3BucketName:
     Type: String
     Description: Name of the S3 bucket to deploy captured files
-    Default: ""
+    Default: "buaws-websites-homepage-test"
   S3Path:
     Type: String
     Description: Path within the S3 bucket for deployed files
@@ -22,25 +22,37 @@ Parameters:
     Description: Prefix of the S3 location (optional)
     Default: home
 
-Conditions:
-  # If S3BucketName is empty, create a new bucket
-  CreateCaptureBucket: !Equals [!Ref S3BucketName, ""]
-
 Resources:
   S3Bucket:
       Type: AWS::S3::Bucket
-      Condition: CreateCaptureBucket
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: error.html
       Properties:
         PublicAccessBlockConfiguration:
           BlockPublicAcls: true
           BlockPublicPolicy: true
-          IgnorePublicAcls: true
-          RestrictPublicBuckets: true
+          IgnorePublicAcls: false
+          RestrictPublicBuckets: false
         BucketEncryption:
           ServerSideEncryptionConfiguration:
             - ServerSideEncryptionByDefault:
                 SSEAlgorithm: AES256
         BucketName: !Sub ${AWS::StackName}-files
+
+  S3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3Bucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: PublicReadForWebsite
+            Effect: Allow
+            Principal: "*"
+            Action:
+              - s3:GetObject
+            Resource: !Sub arn:aws:s3:::${S3Bucket}/*  
 
   # SQS Queue to buffer page capture requests from the API Gateway.
   # Page captures can be long running jobs, and require a queue to receive and process API Gateway requests within their 30 second timeout.
@@ -58,7 +70,7 @@ Resources:
       Environment:
         Variables:
           CAPTURE_URL: !Ref CaptureUrl
-          S3_BUCKET_NAME: !If [CreateCaptureBucket, !Ref S3Bucket, !Ref S3BucketName]
+          S3_BUCKET_NAME: !Ref S3Bucket
           S3_PATH: !Ref S3Path
           SUBDIR_PREFIX: !Ref SubdirPrefix
       Events:
@@ -81,7 +93,7 @@ Resources:
       Policies:
         - AWSLambdaBasicExecutionRole
         - S3CrudPolicy:
-            BucketName: !If [CreateCaptureBucket, !Ref S3Bucket, !Ref S3BucketName]
+            BucketName: !Ref S3Bucket
 
   # API Gateway endpoint secured with an API Key.  Anyone with the URL and API key can request new page captures.
   TriggerEndpoint:
@@ -121,6 +133,9 @@ Resources:
             Method: get
 
 Outputs:
+  S3BucketName:
+    Value: !Ref S3Bucket
+    Description: S3 Bucket for static site storage.
   ApiGateway:
     Description: "The trigger URL is:"
     Value: !Sub "https://${TriggerEndpoint}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
