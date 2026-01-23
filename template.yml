@@ -25,10 +25,10 @@ Parameters:
 Resources:
   S3Bucket:
       Type: AWS::S3::Bucket
-      WebsiteConfiguration:
-        IndexDocument: index.html
-        ErrorDocument: error.html
       Properties:
+        WebsiteConfiguration:
+          IndexDocument: index.html
+          ErrorDocument: error.html
         PublicAccessBlockConfiguration:
           BlockPublicAcls: true
           BlockPublicPolicy: true
