@@ -31,8 +31,8 @@ Resources:
           ErrorDocument: error.html
         PublicAccessBlockConfiguration:
           BlockPublicAcls: true
-          BlockPublicPolicy: true
-          IgnorePublicAcls: false
+          BlockPublicPolicy: false
+          IgnorePublicAcls: true
           RestrictPublicBuckets: false
         BucketEncryption:
           ServerSideEncryptionConfiguration:
