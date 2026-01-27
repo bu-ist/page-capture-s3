@@ -9,10 +9,9 @@
  * https://aws.amazon.com/blogs/compute/choosing-between-messaging-services-for-serverless-applications/
  */
 
- const AWS = require('aws-sdk');
- const sqs = new AWS.SQS({apiVersion: '2012-11-05'});
- 
- exports.captureTriggerHandler = async (event, context) => {
+import AWS from 'aws-sdk';
+const sqs = new AWS.SQS({ apiVersion: '2012-11-05' });
+export async function captureTriggerHandler(event, context) {
  
      const params = {
          MessageBody: `Page capture request at ${Date()}`,
