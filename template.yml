@@ -67,7 +67,7 @@ Resources:
       Description: Lambda function to run the page capture and upload to S3. Runs when a request comes into the Capture Queue.
       Runtime: nodejs22.x
       CodeUri: src/
-      Handler: page-capture.pageCapture
+      Handler: app.pageCapture
       Environment:
         Variables:
           CAPTURE_URL: !Ref CaptureUrl
@@ -117,7 +117,8 @@ Resources:
     Properties:
       Description: Trigger to pass the API gateway event into SQS
       Runtime: nodejs22.x
-      Handler: src/trigger.captureTriggerHandler
+      CodeUri: src/
+      Handler: app.captureTriggerHandler
       Policies:
         SQSSendMessagePolicy: 
           QueueName: !GetAtt CaptureQueue.QueueName

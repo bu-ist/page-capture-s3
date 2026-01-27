@@ -4,7 +4,6 @@
   "description": "Capture a page an associated assets and push it to object storage",
   "author": "jaydub@bu.edu",
   "license": "MIT",
-  "main": "page-capture.js",
   "type": "module",
   "scripts": {
     "test": "No test specified."
