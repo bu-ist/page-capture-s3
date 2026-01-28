@@ -3,7 +3,7 @@
  */
 
 // 
-// website-scraper is ESM-only in recent versions. In CommonJS, load it via dynamic import().
+// Using a dynamic import for website-scraper to make it work with vitest.
 const scrapeModulePromise = import('website-scraper');
 import { createClient } from 's3-node-client';
 import del from 'del';

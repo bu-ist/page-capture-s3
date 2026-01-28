@@ -38,5 +38,5 @@
         - run: npm ci
         - run: npm test
         - run: sam build --config-env test --use-container
-        - run: sam deploy --config-env test
+        - run: sam deploy --config-env test --no-fail-on-empty-changeset
   
