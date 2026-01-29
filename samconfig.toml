@@ -55,6 +55,6 @@ parameter_overrides = [
   "GithubActionsRoleName=websites-homepage-capture-s3-test-GithubActionsCloudFormingRole",
   "GitHubRepository=page-capture-s3",
   "AllowedBranch=test",
-  "PageCaptureStackName=websites-homepage-capture-s3-test"
+  "PageCaptureStackName=websites-homepage-capture"
 ]
 image_repositories = []
