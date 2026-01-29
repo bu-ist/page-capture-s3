@@ -19,18 +19,42 @@ s3_prefix = "websites-homepage-capture-s3-test"
 resolve_s3 = true
 region = "us-east-1"
 capabilities = "CAPABILITY_IAM"
-tags = "Service=\"websites\" Function=\"homepage\" Landscape=\"test\""
-parameter_overrides = "CaptureUrl=\"https://www-test.bu.edu/homepage-alt/?is_buhp_scrape=true\" S3BucketName=\"websites-homepage-capture-s3-test-files\" S3Path=\"\" SubdirPrefix=\"home\""
+tags = "Service=\"websites\" Function=\"homepage\" Landscape=\"test\" CostCenter=\"AWS Websites\""
+parameter_overrides = [
+  "CaptureUrl=https://www-test.bu.edu/homepage-alt/?is_buhp_scrape=true",
+  "S3BucketName=websites-homepage-capture-s3-test-files",
+  "S3Path=",
+  "SubdirPrefix=home"
+]
 image_repositories = []
 
 [prod]
 [prod.deploy]
 [prod.deploy.parameters]
-stack_name = "homepage-capture-s3-prod"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-38xdmgxvov6s"
-s3_prefix = "homepage-capture-s3-prod"
+stack_name = "websites-homepage-capture-s3-prod"
+s3_prefix = "websites-homepage-capture-s3-prod"
 region = "us-east-1"
-confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
-parameter_overrides = "CaptureUrl=\"https://www.bu.edu/homepage-alt/?is_buhp_scrape=true\" S3BucketName=\"buaws-websites-homepage-prod\" S3Path=\"\" SubdirPrefix=\"home\""
+tags = "Service=\"websites\" Function=\"homepage\" Landscape=\"prod\" CostCenter=\"AWS Websites\""
+parameter_overrides = "CaptureUrl=\"https://www.bu.edu/homepage-alt/?is_buhp_scrape=true\" S3BucketName=\"websites-homepage-capture-s3-prod-files\" S3Path=\"\" SubdirPrefix=\"home\""
+image_repositories = []
+
+# IAM Role
+
+[iam-test]
+[iam-test.deploy]
+[iam-test.deploy.parameters]
+template_file = "iam-role-template.yml"
+stack_name = "websites-homepage-capture-s3-test-role"
+s3_prefix = "websites-homepage-capture-s3-test-role"
+resolve_s3 = true
+region = "us-east-1"
+capabilities = "CAPABILITY_NAMED_IAM"
+tags = "Service=\"websites\" Function=\"homepage\" Landscape=\"test\" CostCenter=\"AWS Websites\""
+parameter_overrides = [
+  "GithubActionsRoleName=websites-homepage-capture-s3-test-GithubActionsCloudFormingRole",
+  "GitHubRepository=page-capture-s3",
+  "AllowedBranch=test",
+  "PageCaptureStackName=homepage-capture-s3-test"
+]
 image_repositories = []

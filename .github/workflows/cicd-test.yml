@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------------------------------------
 # 
-# This is the production continuous integration build github action.
+# This is the test continuous integration build github action.
 # Activates on any commit to the test branch.
 #
 # ----------------------------------------------------------------------------------------------------------
@@ -32,7 +32,7 @@
             node-version: '22'
         - uses: aws-actions/configure-aws-credentials@v2
           with: 
-            role-to-assume: arn:aws:iam::770203350335:role/PageCaptureGithubActionsCloudFormingRole
+            role-to-assume: arn:aws:iam::770203350335:role/websites-homepage-capture-s3-test-GithubActionsCloudFormingRole
             role-session-name: GitHub_to_AWS_via_FederatedOIDC
             aws-region: ${{ env.AWS_REGION }}
         - run: npm ci

@@ -1,0 +1,77 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: IAM role for GitHub Actions using OIDC
+
+Parameters:
+  GithubActionsRoleName:
+    Type: String
+    Description: IAM role name to create for GitHub Actions OIDC
+
+  GitHubRepository:
+    Type: String
+    Description: >
+      GitHub repository that will use the role
+
+  AllowedBranch:
+    Type: String
+    Default: test
+    Description: Git branch allowed to assume the role
+
+  PageCaptureStackName:
+    Type: String
+  
+
+
+Resources:
+  GithubActionsOidcRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Ref GithubActionsRoleName
+
+      # ---------------------------
+      # Trust policy (OIDC)
+      # ---------------------------
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: !Sub arn:aws:iam::${AWS::AccountId}:oidc-provider/token.actions.githubusercontent.com
+            Action: sts:AssumeRoleWithWebIdentity
+            Condition:
+              StringEquals:
+                token.actions.githubusercontent.com:aud: sts.amazonaws.com
+                token.actions.githubusercontent.com:sub: !Sub
+                  - "repo:bu-ist/${Repo}:ref:refs/heads/${Branch}"
+                  - Repo: !Ref GitHubRepository
+                    Branch: !Ref AllowedBranch
+
+      # ---------------------------
+      # Inline role policy
+      # ---------------------------
+      Policies:
+        - PolicyName: GithubActionsInlinePolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: "*"
+                Resource: "*"
+
+              - Effect: Deny
+                Action:
+                  - iam:CreateServiceLinkedRole
+                Resource: "*"
+
+              - Effect: Deny
+                Action:
+                  - iam:PassRole
+                NotResource: !Sub arn:aws:iam::${AWS::AccountId}:role/${PageCaptureStackName}-*
+
+Outputs:
+  GithubActionsOidcRoleArn:
+    Description: ARN of the GitHub Actions OIDC role
+    Value: !GetAtt GithubActionsOidcRole.Arn
+
+  GithubActionsOidcRoleName:
+    Description: Name of the GitHub Actions OIDC role
+    Value: !Ref GithubActionsOidcRole
