@@ -132,11 +132,11 @@ In the samconfig configure these parameters:
 Build the role with a specified iam-role-template
 
 ```bash
-sam build --config-file=iam-role-template.yml 
+sam build --config-file iam-role-template.yml 
 ```
 
 This will deploy the role
 
 ```bash
-sam deploy --config-env=iam-prod
+sam deploy --config-env iam-prod
 ```
