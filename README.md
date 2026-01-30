@@ -116,3 +116,27 @@ From the webrouter prod account, this will deploy to the existing prod setup:
 ```bash
 sam deploy --config-file=samconfig.toml --config-env=prod
 ```
+
+## Deploy Via GitHub Action
+
+As of 1.1.0, pushes to the `main` and `test` branches trigger automatic deploys using GitHub actions.  
+To deploy via GitHub Action, an OICD role must be first created with specific parameters to let it build and deploy.
+
+In the samconfig configure these parameters:
+
+- `GithubActionsRoleName` is the name of the OICD role.
+- `GitHubRepository` is the repository name where this role is granted access.
+- `AllowedBranch` is the branch where access is granted.
+- `PageCaptureStackName` should match the stack name of the page-capture stack.
+
+Build the role with a specified iam-role-template
+
+```bash
+sam build --config-file=iam-role-template.yml 
+```
+
+This will deploy the role
+
+```bash
+sam deploy --config-env=iam-prod
+```

@@ -11,6 +11,7 @@
 
 import AWS from 'aws-sdk';
 const sqs = new AWS.SQS({ apiVersion: '2012-11-05' });
+
 export async function captureTriggerHandler(event, context) {
  
      const params = {

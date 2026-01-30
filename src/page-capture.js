@@ -14,7 +14,7 @@ import ValidatePlugin from './page-capture/validatePlugin.js';
 const captureURL = new Url(process.env.CAPTURE_URL);
 
 // Allow for a prefix to the subdirectory, and add a slash if it is set.
-const subDirPrefix = process.env.SUBDIR_PREFIX !== '' ? `${process.env.SUBDIR_PREFIX}/` : '';
+const subDirPrefix = (process.env.SUBDIR_PREFIX !== '') ? `${process.env.SUBDIR_PREFIX}/` : '';
 
 const client = createClient();
 
