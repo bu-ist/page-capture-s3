@@ -1,0 +1,41 @@
+# ----------------------------------------------------------------------------------------------------------
+# 
+# This is the production continuous integration build github action.
+# Activates on any commit to the main branch.
+#
+# ----------------------------------------------------------------------------------------------------------
+
+  name: 
+    Homepage capture lambda deploy to main
+  
+  on:
+    push:
+      branches:
+        - main
+  
+  env:
+    AWS_REGION: us-east-1
+  
+  permissions: 
+    id-token: write   # This is required for requesting the JWT
+    contents: read    # This is required for actions/checkout
+  
+  jobs:
+    # Setup the container, build and deploy the app
+    build-and-deploy:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4.1.7
+        - uses: aws-actions/setup-sam@v2
+        - uses: actions/setup-node@v4.0.3
+          with:
+            node-version: '22'
+        - uses: aws-actions/configure-aws-credentials@v2
+          with: 
+            role-to-assume: arn:aws:iam::115619461932:role/websites-homepage-capture-s3-prod-GithubActionsCloudFormingRole
+            role-session-name: GitHub_to_AWS_via_FederatedOIDC
+            aws-region: ${{ env.AWS_REGION }}
+        - run: npm ci
+        - run: npm test
+        - run: sam build --config-env prod --use-container
+        - run: sam deploy --config-env prod --no-fail-on-empty-changeset
