@@ -1,0 +1,17 @@
+{
+  "name": "page-capture-s3",
+  "version": "1.1.0",
+  "description": "Capture a page an associated assets and push it to object storage",
+  "author": "jaydub@bu.edu",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "test": "No test specified."
+  },
+  "dependencies": {
+    "del": "^6.1.1",
+    "s3-node-client": "^4.4.4",
+    "url-parse": "^1.5.3",
+    "website-scraper": "^6.0.0"
+  }
+}

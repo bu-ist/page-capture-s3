@@ -1,4 +1,4 @@
-module.exports = class ValidatePlugin {
+export default class ValidatePlugin {
     apply(registerAction) {
         registerAction('error', async ({error}) => {console.error(error)});
         registerAction('onResourceError', ({resource, error}) => console.log(`Resource ${resource.url} has error ${error}`));
@@ -16,5 +16,5 @@ module.exports = class ValidatePlugin {
                 };
             }
         });
-    }
+   }
 }

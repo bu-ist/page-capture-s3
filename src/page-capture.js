@@ -2,21 +2,26 @@
  * A Lambda function that captures a given page as static files, and uploads the files to S3.
  */
 
-const scrape = require('website-scraper');
-const s3 = require('s3-node-client');
-const del = require('del');
-const Url = require('url-parse');
+// 
+// Using a dynamic import for website-scraper to make it work with vitest.
+const scrapeModulePromise = import('website-scraper');
+import { createClient } from 's3-node-client';
+import del from 'del';
+import Url from 'url-parse';
 
-const ValidatePlugin = require('./page-capture/validatePlugin');
+import ValidatePlugin from './page-capture/validatePlugin.js';
 
 const captureURL = new Url(process.env.CAPTURE_URL);
 
 // Allow for a prefix to the subdirectory, and add a slash if it is set.
 const subDirPrefix = (process.env.SUBDIR_PREFIX !== '') ? `${process.env.SUBDIR_PREFIX}/` : '';
 
-const client = s3.createClient();
+const client = createClient();
 
-exports.pageCapture = async (event, context, callback) => {
+export async function pageCapture(event, context, callback) {
+    const mod = await scrapeModulePromise;
+    const scrape = mod.default ?? mod;
+    
     // Track the event source for logging purposes
     let eventMessage = '';
 
@@ -56,7 +61,7 @@ exports.pageCapture = async (event, context, callback) => {
             Prefix: process.env.S3_PATH,
         },
     };
-
+    
     const result = await scrape(scrapeOptions);
 
     if (result[0].saved) {
@@ -72,7 +77,7 @@ exports.pageCapture = async (event, context, callback) => {
             console.log("done uploading, deleting local files");
 
             (async () => {
-                deletedPaths = await del(['/tmp/page-capture/*'], {force: true});
+                const deletedPaths = await del(['/tmp/page-capture/*'], {force: true});
                 console.log('deleted temp files at: ', deletedPaths);
             })();
 

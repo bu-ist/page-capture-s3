@@ -23,6 +23,37 @@ Parameters:
     Default: home
 
 Resources:
+  S3Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        WebsiteConfiguration:
+          IndexDocument: index.html
+          ErrorDocument: error.html
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: true
+          BlockPublicPolicy: false
+          IgnorePublicAcls: true
+          RestrictPublicBuckets: false
+        BucketEncryption:
+          ServerSideEncryptionConfiguration:
+            - ServerSideEncryptionByDefault:
+                SSEAlgorithm: AES256
+        BucketName: !Sub ${AWS::StackName}-files
+
+  S3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3Bucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: PublicReadForWebsite
+            Effect: Allow
+            Principal: "*"
+            Action:
+              - s3:GetObject
+            Resource: !Sub arn:aws:s3:::${S3Bucket}/*  
+
   # SQS Queue to buffer page capture requests from the API Gateway.
   # Page captures can be long running jobs, and require a queue to receive and process API Gateway requests within their 30 second timeout.
   CaptureQueue:
@@ -34,12 +65,13 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Description: Lambda function to run the page capture and upload to S3. Runs when a request comes into the Capture Queue.
-      Runtime: nodejs14.x
-      Handler: src/page-capture.pageCapture
+      Runtime: nodejs22.x
+      CodeUri: src/
+      Handler: app.pageCapture
       Environment:
         Variables:
           CAPTURE_URL: !Ref CaptureUrl
-          S3_BUCKET_NAME: !Ref S3BucketName
+          S3_BUCKET_NAME: !Ref S3Bucket
           S3_PATH: !Ref S3Path
           SUBDIR_PREFIX: !Ref SubdirPrefix
       Events:
@@ -62,7 +94,7 @@ Resources:
       Policies:
         - AWSLambdaBasicExecutionRole
         - S3CrudPolicy:
-            BucketName: !Ref S3BucketName
+            BucketName: !Ref S3Bucket
 
   # API Gateway endpoint secured with an API Key.  Anyone with the URL and API key can request new page captures.
   TriggerEndpoint:
@@ -84,8 +116,9 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Description: Trigger to pass the API gateway event into SQS
-      Runtime: nodejs14.x
-      Handler: src/trigger.captureTriggerHandler
+      Runtime: nodejs22.x
+      CodeUri: src/
+      Handler: app.captureTriggerHandler
       Policies:
         SQSSendMessagePolicy: 
           QueueName: !GetAtt CaptureQueue.QueueName
@@ -102,6 +135,9 @@ Resources:
             Method: get
 
 Outputs:
+  S3BucketName:
+    Description: S3 Bucket for static site storage.
+    Value: !Ref S3Bucket
   ApiGateway:
     Description: "The trigger URL is:"
     Value: !Sub "https://${TriggerEndpoint}.execute-api.${AWS::Region}.amazonaws.com/Prod/"

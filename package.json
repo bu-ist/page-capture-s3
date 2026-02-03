@@ -1,17 +1,22 @@
 {
   "name": "page-capture-s3",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Capture a page an associated assets and push it to object storage",
   "author": "jaydub@bu.edu",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "local:schedule": "sam local generate-event cloudwatch scheduled-event | sam local invoke -e - PageCaptureFunction",
-    "local:sqs": "sam local generate-event sqs receive-message | sam local invoke -e - PageCaptureFunction"
+    "local:sqs": "sam local generate-event sqs receive-message | sam local invoke -e - PageCaptureFunction",
+    "test": "vitest"
   },
   "dependencies": {
-    "del": "^6.0.0",
+    "del": "^6.1.1",
     "s3-node-client": "^4.4.4",
     "url-parse": "^1.5.3",
-    "website-scraper": "^4.2.3"
+    "website-scraper": "^6.0.0"
+  },
+  "devDependencies": {
+    "vitest": "^4.0.17"
   }
 }
