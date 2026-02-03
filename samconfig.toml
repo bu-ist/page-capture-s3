@@ -33,6 +33,7 @@ image_repositories = []
 [prod.deploy.parameters]
 stack_name = "websites-homepage-capture-s3-prod"
 s3_prefix = "websites-homepage-capture-s3-prod"
+resolve_s3 = true
 region = "us-east-1"
 capabilities = "CAPABILITY_IAM"
 tags = "Service=\"websites\" Function=\"homepage\" Landscape=\"prod\""
